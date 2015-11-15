@@ -200,9 +200,8 @@ class oset {
     // *** THIS CODE HAS COST O(N^2).  IT SHOULD BE O(N).
     //
     oset& operator+=(oset& other) {
-        for (iter i = other.begin(); i != other.end(); ++i) {
+        for (iter i = other.begin(); i != other.end(); ++i)
             operator+=(*i);
-        }
         return *this;
     }
 
@@ -211,9 +210,8 @@ class oset {
     // *** THIS CODE HAS COST O(N^2).  IT SHOULD BE O(N).
     //
     oset& operator-=(oset& other) {
-        for (iter i = other.begin(); i != other.end(); ++i) {
+        for (iter i = other.begin(); i != other.end(); ++i)
             operator-=(*i);
-        }
         return *this;
     }
 
@@ -223,9 +221,8 @@ class oset {
     //
     oset& operator*=(oset& other) {
         oset temp;      // empty
-        for (iter i = begin(); i != end(); ++i) {
+        for (iter i = begin(); i != end(); ++i)
             if (other[*i]) temp+=(*i);
-        }
         clear();
         operator+=(temp);   // union
         // NB: temp is destructed as we leave this scope
@@ -234,15 +231,13 @@ class oset {
 };
 
 void print(oset& OS) {
-    for (oset::iter i = OS.begin(); i != OS.end(); ++i) {
+    for (oset::iter i = OS.begin(); i != OS.end(); ++i)
         cout << *i << " ";
-    }
     cout << endl;
 }
 
 int main() {
     // Some simple testing code.  You'll need a lot more.
-
     oset S;     // empty set
     S += 3;     // now should contain 3
 
