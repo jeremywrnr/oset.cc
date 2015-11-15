@@ -1,29 +1,29 @@
 /*
-    Starter code for assignment 5, CSC 254, Fall 2015
+   Starter code for assignment 5, CSC 254, Fall 2015
 
-    Provides skeleton of code for generic ordered sets.
+   Provides skeleton of code for generic ordered sets.
 
-    Everything but /main/ should be moved to a .h file, which should
-    then be #included from here.
+   Everything but /main/ should be moved to a .h file, which should
+   then be #included from here.
 
-    Be sure to read the assignment web page carefully.
-    Then search for all-caps comments preceded by '***' for hints as to
-    where you should make changes.
+   Be sure to read the assignment web page carefully.
+   Then search for all-caps comments preceded by '***' for hints as to
+   where you should make changes.
 
-    A couple warnings:
+   A couple warnings:
 
-    (1) Don't try to modify an oset while you're iterating over it.
-        The following may not work:
-            for (oset::iter i = begin(); i != end(); ++i) {
-                if (!other[*i]) operator-=(*i);
-            }
+   (1) Don't try to modify an oset while you're iterating over it.
+   The following may not work:
+   for (oset::iter i = begin(); i != end(); ++i) {
+   if (!other[*i]) operator-=(*i);
+   }
 
-    (2) Don't try to modify an oset in the middle of a string of output:
-        The following may not work:
-            cout << (S += 9) << " " << S[9] << endl;
-        (Because this is all one expression, the compiler is free to
-        evaluate S[9] before it evaluates (S += 9)).
-*/
+   (2) Don't try to modify an oset in the middle of a string of output:
+   The following may not work:
+   cout << (S += 9) << " " << S[9] << endl;
+   (Because this is all one expression, the compiler is free to
+   evaluate S[9] before it evaluates (S += 9)).
+   */
 
 #include <iostream>
 using std::cout;
@@ -40,28 +40,28 @@ void print(oset& OS);       // for debugging
 //
 class oset {
     class node {
-     public:
-        const int val;
-        node *next;
-        node(int v) : val(v), next(NULL) { }
+        public:
+            const int val;
+            node *next;
+            node(int v) : val(v), next(NULL) { }
     };
     node head;
-        // NB: _not_ node*.  There's a dummy node here, with garbage val;
-        // Existence of this node avoids several special cases in the
-        // methods below.
+    // NB: _not_ node*.  There's a dummy node here, with garbage val;
+    // Existence of this node avoids several special cases in the
+    // methods below.
     node beyond;
-        // to simplify iterator.
+    // to simplify iterator.
 
     //--------------------------------------
     // Iterator support
 
- public:
+    public:
     class iter {
         node *pos;          // node _before_ the one with this->operator*
         // constructor is private:
         iter(node* n) : pos(n) { }
-    friend class oset;      // so oset can call the (private) constructor
-    public:
+        friend class oset;      // so oset can call the (private) constructor
+        public:
         const int& operator*() {
             return pos->next->val;
         }
@@ -81,11 +81,11 @@ class oset {
         bool operator!=(iter other) {return pos->next != other.pos->next;}
     };
 
- private:
+    private:
     iter start;         // initialized in the constructors below
     iter finish;        // initialized in the constructors below
 
- public:
+    public:
     iter begin() {
         return start;
     }
@@ -118,7 +118,7 @@ class oset {
         n->next = NULL;
     }
 
- private:
+    private:
     void clear() {
         node *n = head.next;
         while (n) {
@@ -129,7 +129,7 @@ class oset {
         head.next = NULL;
     }
 
- public:
+    public:
     // destructor -- clean up nodes:
     ~oset() {
         clear();
@@ -143,7 +143,7 @@ class oset {
     //--------------------------------------
     // Find, insert, and remove
 
-private:
+    private:
     // Return pointer to last node with val < v
     //
     // *** THIS CODE IMPLICITLY REQUIRES A >= OPERATOR FOR THE SET
@@ -159,7 +159,7 @@ private:
         }
     }
 
-public:
+    public:
     // find -- return true iff present:
     bool operator[](const int v) {
         node* p = find_prev(v);
