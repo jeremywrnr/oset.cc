@@ -90,7 +90,10 @@ class oset {
     public:
     ~oset() { clear(); }
 
+    //-------------------------------------------------------- Class Methods
     node* find_prev(const int v);
+    oset& operator=(oset& other);
+    oset& operator+=(const int v);
 };
 
 #endif

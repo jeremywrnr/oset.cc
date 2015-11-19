@@ -1,22 +1,7 @@
 /*
-   Jeremy Warner for assignment 5, CSC 254, Fall 2015
-   Provides code for generic ordered sets.
-
-   A couple warnings:
-
-   (1) Don't try to modify an oset while you're iterating over it.
-   The following may not work:
-   for (oset::iter i = begin(); i != end(); ++i) {
-   if (!other[*i]) operator-=(*i);
-   }
-
-   (2) Don't try to modify an oset in the middle of a string of output:
-   The following may not work:
-   cout << (S += 9) << " " << S[9] << endl;
-   (Because this is all one expression, the compiler is free to
-   evaluate S[9] before it evaluates (S += 9)).
-
-*/
+ * Jeremy Warner for assn 5, CSC 254, F2015
+ * Provides code for generic ordered sets.
+ ***/
 
 #include <iostream>
 #include "oset.h"

@@ -11,17 +11,28 @@ oset::node* oset::find_prev(const int v) {
     }
 }
 
-/*
 // assignment
 oset& oset::operator=(oset& other) {
-clear();
-operator+=(other);      // union (see below)
+    clear();
+    operator+=(other);      // union (see below)
 }
 
-bool oset::operator[](const int v) {
-node* p = find_prev(v);
-return (p->next != NULL && p->next->val == v);
+oset& oset::operator+=(const int v) {
+    node* p = find_prev(v);
+    if (p->next == NULL || p->next->val != v) {
+        node* n = new node(v);
+        n->next = p->next;
+        p->next = n;
+    }
+    return *this;
 }
+
+/*
+
+   bool oset::operator[](const int v) {
+   node* p = find_prev(v);
+   return (p->next != NULL && p->next->val == v);
+   }
 
 // remove v if present; return ref to self
 oset& oset::operator-=(const int v) {
@@ -36,15 +47,6 @@ return *this;
 }
 
 // insert v if not already present; return ref to self
-oset& oset::operator+=(const int v) {
-node* p = find_prev(v);
-if (p->next == NULL || p->next->val != v) {
-node* n = new node(v);
-n->next = p->next;
-p->next = n;
-}
-return *this;
-}
 
 //--------------------------------------
 // Union, intersection and difference.
