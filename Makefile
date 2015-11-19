@@ -1,6 +1,7 @@
-all:
-	g++ oset.cc -o oset
-run: all
-	./oset
+bin=oset
+run: compile
+	./$(bin)
+compile:
+	g++ *.cc -o $(bin)
 clean:
-	rm oset
+	rm -v $(bin)
