@@ -1,7 +1,18 @@
 #ifndef _oset_h
 #define _oset_h
 
-// for debugging
+class oset;
+void print(oset& OS);
+
+using std::cout;
+using std::endl;
+using std::flush;
+
+// Non-generic starter code.
+//
+// *** THIS SKELETON ENVISIONS INTEGER ELEMENTS.
+// *** YOUR VERSION SHOULD BE POLYMORPHIC.
+//
 class oset {
     class node {
         public:
@@ -13,12 +24,9 @@ class oset {
     // NB: _not_ node*.  There's a dummy node here, with garbage val;
     // Existence of this node avoids several special cases in the
     // methods below.
-    //
     node beyond; // to simplify iterator.
 
-    //--------------------------------------
-    // Iterator support
-
+    //--------------------------------------------------------- Iterator support
     public:
     class iter {
         node *pos;          // node _before_ the one with this->operator*
@@ -193,6 +201,5 @@ class oset {
         return *this;
     }
 };
-void print(oset& OS);
 
 #endif
