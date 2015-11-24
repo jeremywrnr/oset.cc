@@ -38,7 +38,7 @@ class oset {
 
         // and this is the postfix version (p++).
         // Note that it returns a copy, _not_ a reference.
-        iter operator++(T) {
+        iter operator++(int) {
             iter rtn = *this;
             if (pos != NULL) pos = pos->next;
             return rtn;
