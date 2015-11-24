@@ -115,9 +115,35 @@ class oset {
 
 
     //-------------------------------------------------------- Assignment
+    // make a new ordered set, overwriting
+    //
     oset& operator=(oset& other) {
         clear();
         return operator+=(other);      // union (see below)
+    }
+
+
+    //-------------------------------------------------------- Includes
+    // is the given element in this set?
+    //
+    bool operator[](const T v) {
+        node* p = find_prev(v);
+        return (p->next != NULL && p->next->val == v);
+    }
+
+
+    //-------------------------------------------------------- Removal
+    // remove v if present; return ref to self
+    //
+    oset& operator-=(const T v) {
+        node* p = find_prev(v);
+        node* t;
+        if ((t = p->next) != NULL && p->next->val == v) {
+            // already present
+            p->next = t->next;
+            delete t;
+        }
+        return *this;
     }
 
 
@@ -130,28 +156,6 @@ class oset {
             node* n = new node(v);
             n->next = p->next;
             p->next = n;
-        }
-        return *this;
-    }
-
-
-    //-------------------------------------------------------- Indexing
-    bool operator[](const int v) {
-        node* p = find_prev(v);
-        return (p->next != NULL && p->next->val == v);
-    }
-
-
-    //-------------------------------------------------------- Removal
-    // remove v if present; return ref to self
-    //
-    oset& operator-=(const int v) {
-        node* p = find_prev(v);
-        node* t;
-        if ((t = p->next) != NULL && p->next->val == v) {
-            // already present
-            p->next = t->next;
-            delete t;
         }
         return *this;
     }

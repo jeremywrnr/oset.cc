@@ -8,11 +8,10 @@
 #include <iostream>
 #include <string>
 #include "oset.h"
+using std::string;
 using std::cout;
 using std::cerr;
 using std::endl;
-using std::flush;
-using std::string;
 
 
 // OSET Tester
@@ -57,14 +56,23 @@ int alphaComp(string a, string b) { return 1; }
 
 // testing code for the oset class (ordered set)
 int main() {
-    // create an empty set, then add 4 and 3
-    // make sure it orders elements added in
+    // 1 | create an empty set, then add 4 and 3
+    // + making sure it orders elements added in
     oset <int> A; A += 4; A += 3;
     int ta[]= {3, 4}; test(ta, A);
 
-    // create an empty set, then add 4 and 5
+    // 2 | Create an empty set, then add 4 and 5
     oset <int> B; B += 4; B += 5;
     int tb[]= {4, 5}; test(tb, B);
+
+    // 3 | Intersect the two sets A and B -> A = {4}
+    A *= B; int taib[]= {4}; test(taib, A);
+
+    // 4 | Difference the two sets A and B -> B = {5}
+    B -= A; int tbda[]= {5}; test(tbda, B);
+
+    // 5 | Union the two sets A and B -> B = {4, 5}
+    B += A; int tbua[]= {4, 5}; test(tbua, B);
 
     // Program compiled and tested successfully!
     cout << "PASS: compiles and runs test successfully." << endl;
