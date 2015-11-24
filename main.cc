@@ -1,13 +1,17 @@
 /*
  * Jeremy Warner for assn 5, CSC 254, F2015
  * Provides code for generic ordered sets.
- ***/
+ * main() tests this ordered set class.
+ * */
+
 
 #include <iostream>
+#include <string>
 #include "oset.h"
 using std::cout;
 using std::endl;
 using std::flush;
+using std::string;
 
 
 //void print(oset& OS) {
@@ -16,10 +20,23 @@ using std::flush;
 //cout << endl;
 //}
 
+
+// Comparator definitions for testing
+typedef int (*IntComparator)(int, int);
+int primeComp(int a, int b) { return 1; }
+int sizeComp(int a, int b) { return 1; }
+
+typedef int (*FloatComparator)(float, float);
+int decimalComp(float a, float b) { return 1; }
+int sizeComp(float a, float b) { return 1; }
+
+typedef int (*StringComparator)(string, string);
+int lengthComp(string a, string b) { return 1; }
+int alphaComp(string a, string b) { return 1; }
+
+
 // testing code for the oset class (ordered set)
 int main() {
-
-    typedef int (*functiontype2)(char);
 
     oset <int, int> S;                 // create an empty set
     cout << "PASS: compiled successfully!" << endl;

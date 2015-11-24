@@ -11,7 +11,7 @@ class oset {
         public:
             const T val;
             node *next;
-            node(T v) : val(v), next(NULL) { }
+            node(T v): val(v), next(NULL) {}
     };
 
     node head;   // this node avoids several special cases in the methods below
