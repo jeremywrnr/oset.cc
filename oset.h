@@ -80,8 +80,7 @@ class oset {
             n->next = new node(o->val);
             o = o->next;
             n = n->next;
-        }
-        n->next = NULL;
+        } n->next = NULL;
     }
 
 
@@ -141,8 +140,7 @@ class oset {
             node* n = new node(v);
             n->next = p->next;
             p->next = n;
-        }
-        return *this;
+        } return *this;
     }
 
 
@@ -164,8 +162,7 @@ class oset {
             // already present
             p->next = t->next;
             delete t;
-        }
-        return *this;
+        } return *this;
     }
 
 

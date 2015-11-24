@@ -93,23 +93,17 @@ int main() {
     // 7 | Copying constructor.
     A = B; test(tbua, A);
 
-    // 8 | create a double set, then add 4 and 3
-    oset <double> C; C += 4; C += 3;
+    // 8 | Create a double set, then add 4 and 3
+    oset <double> C; (C += 4) += 3;
     double tc[]= {3, 4}; test(tc, C);
+
+    // 9 | Make set w/ 6, then add 5 and 4
+    // + testing removing fake elements
+    oset <double> D(6); (D += 5) += 4;
+    double td[]= {4, 5, 6}; test(td, D);
+    D -= 10; D -= 20; D -= 30; D -= 40;
 
     // Program compiled and tested successfully!
     cout << "PASS: compiles and runs test successfully." << endl;
 }
 
-
-
-
-
-
-/*
-// EXTRA SCOTT TESTING
-(S += 5) += 7;
-oset <int> T(3);                // singleton
-S -= 4;                         // should be a no-op
-S -= 3;
-*/
