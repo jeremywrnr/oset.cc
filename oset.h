@@ -175,11 +175,11 @@ class oset {
 
     //-------------------------------------------------------- Intersection
     oset& operator*=(oset& other) {
-        oset temp;      // empty
+        oset temp; // empty
         for (iter i = begin(); i != end(); ++i)
             if (other[*i]) temp+=(*i);
         clear();
-        operator+=(temp);   // union
+        operator+=(temp); // union
         return *this; // NB: temp is destructed as we leave this scope
     }
 };
