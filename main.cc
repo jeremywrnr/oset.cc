@@ -13,9 +13,12 @@
  * */
 
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include "oset.h"
+
+using std::transform;
 using std::string;
 using std::cout;
 using std::cerr;
@@ -58,11 +61,14 @@ void print(oset<T>& OS) {
 
 
 // Comparator definitions for testing
-typedef int (*DoubleComparator)(double, double);
-int sizeComp(double a, double b) { return a>=b? 1:0;}
-
+// Case (in) sensitive comparator (dont convert)
 typedef int (*StringComparator)(string, string);
-int lengthComp(string a, string b) { return 1; }
+int caseComp(string a, string b) { return a.compare(b); }
+int alphaComp(string a, string b) { // convert to lower
+    transform(a.begin(), a.end(), a.begin(), ::tolower);
+    transform(b.begin(), b.end(), b.begin(), ::tolower);
+    return a.compare(b);
+}
 
 
 // testing code for the oset class (ordered set)
@@ -104,6 +110,6 @@ int main() {
     D -= 10; D -= 20; D -= 30; D -= 40;
 
     // Program compiled and tested successfully!
-    cout << "PASS: compiles and runs test successfully." << endl;
+    cout << "PASS: compiles and runs tests successfully." << endl;
 }
 
