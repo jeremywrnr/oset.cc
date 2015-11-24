@@ -5,7 +5,8 @@
 #include <stddef.h>
 
 
-template<typename T, typename C> // type T, comparator C
+//----------------------------------------------------------------------- Type T
+template<class T>
 class oset {
     class node {
         public:
@@ -16,6 +17,7 @@ class oset {
 
     node head;   // this node avoids several special cases in the methods below
     node beyond; // to simplify iterator.
+
 
     //--------------------------------------------------------- Iterator support
     public:
@@ -28,11 +30,13 @@ class oset {
         const T& operator*() {
             return pos->next->val;
         }
+
         // support forward iteration.  This is prefix version (++p).
         iter& operator++() {
             if (pos != NULL) pos = pos->next;
             return *this;
         }
+
         // and this is the postfix version (p++).
         // Note that it returns a copy, _not_ a reference.
         iter operator++(T) {
@@ -40,19 +44,23 @@ class oset {
             if (pos != NULL) pos = pos->next;
             return rtn;
         }
+
         bool operator==(iter other) {return pos->next == other.pos->next;}
         bool operator!=(iter other) {return pos->next != other.pos->next;}
     };
+
 
     //--------------------------------------------------------- Set endpoints
     private:
     iter start;         // initialized in the constructors below
     iter finish;        // initialized in the constructors below
 
+
     //-------------------------------------------------------- Endpoint readers
     public:
     iter begin() { return start; }
     iter end() { return finish; }
+
 
     //-------------------------------------------------------- The Constructor
     oset() : head(0), beyond(0), start(&head), finish(&beyond) {
@@ -76,6 +84,7 @@ class oset {
         n->next = NULL;
     }
 
+
     //-------------------------------------------------------- The Destructor
     private:
     void clear() {
@@ -91,10 +100,88 @@ class oset {
     public:
     ~oset() { clear(); }
 
+
     //-------------------------------------------------------- Class Methods
-    node* find_prev(const T v);
-    oset& operator=(oset& other);
-    oset& operator+=(const T v);
+    //
+    //-------------------------------------------------- Find (true iff present)
+    node* find_prev(const T v) {
+        node* p = &head;
+        while (true) {
+            if (p->next == NULL) return p;
+            if (p->next->val >= v) return p;
+            p = p->next;
+        }
+    }
+
+
+    //-------------------------------------------------------- Assignment
+    oset& operator=(oset& other) {
+        clear();
+        operator+=(other);      // union (see below)
+    }
+
+
+    //-------------------------------------------------------- Insertion
+    // insert v if not already present; return ref to self
+    //
+    oset& operator+=(const T v) {
+        node* p = find_prev(v);
+        if (p->next == NULL || p->next->val != v) {
+            node* n = new node(v);
+            n->next = p->next;
+            p->next = n;
+        }
+        return *this;
+    }
+
+
+    //-------------------------------------------------------- Indexing
+    bool operator[](const int v) {
+        node* p = find_prev(v);
+        return (p->next != NULL && p->next->val == v);
+    }
+
+
+    //-------------------------------------------------------- Removal
+    // remove v if present; return ref to self
+    //
+    oset& operator-=(const int v) {
+        node* p = find_prev(v);
+        node* t;
+        if ((t = p->next) != NULL && p->next->val == v) {
+            // already present
+            p->next = t->next;
+            delete t;
+        }
+        return *this;
+    }
+
+
+    //-------------------------------------------------------- Union
+    oset& operator+=(oset& other) {
+        for (iter i = other.begin(); i != other.end(); ++i)
+            operator+=(*i);
+        return *this;
+    }
+
+
+    //-------------------------------------------------------- Difference
+    oset& operator-=(oset& other) {
+        for (iter i = other.begin(); i != other.end(); ++i)
+            operator-=(*i);
+        return *this;
+    }
+
+
+    //-------------------------------------------------------- Intersection
+    oset& operator*=(oset& other) {
+        oset temp;      // empty
+        for (iter i = begin(); i != end(); ++i)
+            if (other[*i]) temp+=(*i);
+        clear();
+        operator+=(temp);   // union
+        return *this; // NB: temp is destructed as we leave this scope
+    }
 };
 
 #endif
