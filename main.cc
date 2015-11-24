@@ -25,16 +25,15 @@ using std::endl;
 // OSET Assert
 int testno = 0;
 void pass() {
-    testno++;
-    cout << "GOOD: passed test number " << testno << endl;}
-template<class T>
-void assert(T exp, T act) {
-    if (exp != act) { // something strange is going on
-        cerr << "FAILURE, expected (" << exp << "), but got (" << act
-            << "). Exiting." << endl;
-        exit(1); // ERR AND DIE
+    cout << "GOOD: passed test number " << ++testno << endl;}
+    template<class T>
+    void assert(T exp, T act) {
+        if (exp != act) { // something strange is going on
+            cerr << "FAILURE: failed test number " << ++testno << endl;
+            cerr << "Expected (" << exp << "), got (" << act << ")" << endl;
+            exit(1); // ERR AND DIE
+        }
     }
-}
 
 
 // OSET Tester
@@ -92,8 +91,13 @@ int main() {
     // 5 | Union the two sets A and B -> B = {4, 5}
     B += A; int tbua[]= {4, 5}; test(tbua, B);
 
-    // 6 | Inclusion - check set B has 3, 4
-    assert(false, B[3]); pass();
+    // 6 | Inclusion - check set B{4,5} contains...
+    assert(false, B[3]); assert(false, B[10]);
+    assert(true, B[4]); assert(true, B[5]);
+    pass(); // need to call manually
+
+    // 7 | Copying constructor.
+    A = B; test(tbua, A);
 
     // Program compiled and tested successfully!
     cout << "PASS: compiles and runs test successfully." << endl;
