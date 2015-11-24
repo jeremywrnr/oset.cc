@@ -1,7 +1,15 @@
 /*
- * Jeremy Warner for assn 5, CSC 254, F2015
- * Provides code for generic ordered sets.
+ * Jeremy Warner for Assignment 5, CSC 254, F2015
+ * oset.h provides code for generic ordered sets.
  * main() tests this ordered set class.
+ *
+ * Since the lists are sorted, we can create O(N) solutions to intersection,
+ * union, and difference operations between sets that are sorted the same way.
+ *
+ * If no comparator is given upon the oset's creation it uses the default '<',
+ * to order elements in increasing order. Otherwise, the user can provide a
+ * comparator function to sort the lists. An example of this is given is shown
+ * below in the test code.
  * */
 
 
@@ -14,20 +22,30 @@ using std::cerr;
 using std::endl;
 
 
-// OSET Tester
+// OSET Assert
 int testno = 0;
+void pass() {
+    testno++;
+    cout << "GOOD: passed test number " << testno << endl;}
+template<class T>
+void assert(T exp, T act) {
+    if (exp != act) { // something strange is going on
+        cerr << "FAILURE, expected (" << exp << "), but got (" << act
+            << "). Exiting." << endl;
+        exit(1); // ERR AND DIE
+    }
+}
+
+
+// OSET Tester
 template<class T>
 void test(T expected[], oset<T>& OS) {
     int e = 0; // expected iterator for checking with primitive arrays
     for (typename oset<T>::iter i = OS.begin(); i != OS.end(); ++i) {
-        if (expected[e] != *i) {
-            cerr << "FAILURE, expected (" << expected[e] << "), but got ("
-                << *i << "). Exiting." << endl;
-            exit(1); // ERR AND DIE
-        } e++; // check next
-    }
-    testno++;
-    cout << "GOOD: passed test number " << testno << endl;
+        assert(expected[e], *i);
+        e++; // check next
+    } // tests have passed!
+    pass();
 }
 
 
@@ -74,13 +92,12 @@ int main() {
     // 5 | Union the two sets A and B -> B = {4, 5}
     B += A; int tbua[]= {4, 5}; test(tbua, B);
 
+    // 6 | Inclusion - check set B has 3, 4
+    assert(false, B[3]); pass();
+
     // Program compiled and tested successfully!
     cout << "PASS: compiles and runs test successfully." << endl;
 }
-
-
-
-
 
 
 

@@ -118,8 +118,8 @@ class oset {
     // make a new ordered set, overwriting
     //
     oset& operator=(oset& other) {
-        clear();
-        return operator+=(other);      // union (see below)
+        clear(); // then do union
+        return operator+=(other);
     }
 
 
@@ -129,6 +129,28 @@ class oset {
     bool operator[](const T v) {
         node* p = find_prev(v);
         return (p->next != NULL && p->next->val == v);
+    }
+
+
+    //-------------------------------------------------------- Insertion
+    // insert v if not already present; return ref to self
+    //
+    oset& operator+=(const T v) {
+        node* p = find_prev(v); // get * to item
+        if (p->next == NULL || p->next->val != v) {
+            node* n = new node(v);
+            n->next = p->next;
+            p->next = n;
+        }
+        return *this;
+    }
+
+
+    //-------------------------------------------------------- Union
+    oset& operator+=(oset& other) {
+        for (iter i = other.begin(); i != other.end(); ++i)
+            operator+=(*i);
+        return *this;
     }
 
 
@@ -147,28 +169,6 @@ class oset {
     }
 
 
-    //-------------------------------------------------------- Insertion
-    // insert v if not already present; return ref to self
-    //
-    oset& operator+=(const T v) {
-        node* p = find_prev(v);
-        if (p->next == NULL || p->next->val != v) {
-            node* n = new node(v);
-            n->next = p->next;
-            p->next = n;
-        }
-        return *this;
-    }
-
-
-    //-------------------------------------------------------- Union
-    oset& operator+=(oset& other) {
-        for (iter i = other.begin(); i != other.end(); ++i)
-            operator+=(*i);
-        return *this;
-    }
-
-
     //-------------------------------------------------------- Difference
     oset& operator-=(oset& other) {
         for (iter i = other.begin(); i != other.end(); ++i)
@@ -183,8 +183,8 @@ class oset {
         for (iter i = begin(); i != end(); ++i)
             if (other[*i]) temp+=(*i);
         clear();
-        operator+=(temp); // union
-        return *this; // NB: temp is destructed as we leave this scope
+        operator+=(temp); // union call
+        return *this; // temp is DESTROYED
     }
 };
 
