@@ -5,12 +5,13 @@
 #include <stddef.h>
 
 
+template<typename T, typename C> // type T, comparator C
 class oset {
     class node {
         public:
-            const int val;
+            const T val;
             node *next;
-            node(int v) : val(v), next(NULL) { }
+            node(T v) : val(v), next(NULL) { }
     };
 
     node head;   // this node avoids several special cases in the methods below
@@ -24,7 +25,7 @@ class oset {
         iter(node* n) : pos(n) { }
         friend class oset;      // so oset can call the (private) constructor
         public:
-        const int& operator*() {
+        const T& operator*() {
             return pos->next->val;
         }
         // support forward iteration.  This is prefix version (++p).
@@ -34,7 +35,7 @@ class oset {
         }
         // and this is the postfix version (p++).
         // Note that it returns a copy, _not_ a reference.
-        iter operator++(int) {
+        iter operator++(T) {
             iter rtn = *this;
             if (pos != NULL) pos = pos->next;
             return rtn;
@@ -59,7 +60,7 @@ class oset {
     }
 
     // new singleton set:
-    oset(int v) : head(0), beyond(0), start(&head), finish(&beyond) {
+    oset(T v) : head(0), beyond(0), start(&head), finish(&beyond) {
         head.next = new node(v);
     }
 
@@ -91,9 +92,9 @@ class oset {
     ~oset() { clear(); }
 
     //-------------------------------------------------------- Class Methods
-    node* find_prev(const int v);
+    node* find_prev(const T v);
     oset& operator=(oset& other);
-    oset& operator+=(const int v);
+    oset& operator+=(const T v);
 };
 
 #endif

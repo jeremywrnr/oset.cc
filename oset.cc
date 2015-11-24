@@ -2,7 +2,8 @@
 
 // TODO make private
 // find -- return true iff present:
-oset::node* oset::find_prev(const int v) {
+template<typename T, typename C> // type T, comparator C
+typename oset<T, C>::node* oset<T, C>::find_prev(const T v) {
     node* p = &head;
     while (true) {
         if (p->next == NULL) return p;
@@ -11,21 +12,27 @@ oset::node* oset::find_prev(const int v) {
     }
 }
 
+
+
+/*
 // assignment
 oset& oset::operator=(oset& other) {
-    clear();
-    operator+=(other);      // union (see below)
+clear();
+operator+=(other);      // union (see below)
 }
 
-oset& oset::operator+=(const int v) {
-    node* p = find_prev(v);
-    if (p->next == NULL || p->next->val != v) {
-        node* n = new node(v);
-        n->next = p->next;
-        p->next = n;
-    }
-    return *this;
+oset& oset::operator+=(const T v) {
+node* p = find_prev(v);
+if (p->next == NULL || p->next->val != v) {
+node* n = new node(v);
+n->next = p->next;
+p->next = n;
 }
+return *this;
+}
+*/
+
+
 
 /*
 

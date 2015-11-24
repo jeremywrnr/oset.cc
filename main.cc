@@ -10,16 +10,33 @@ using std::endl;
 using std::flush;
 
 
-void print(oset& OS) {
-    for (oset::iter i = OS.begin(); i != OS.end(); ++i)
-        cout << *i << " ";
-    cout << endl;
-}
+//void print(oset& OS) {
+//for (oset::iter i = OS.begin(); i != OS.end(); ++i)
+//cout << *i << " ";
+//cout << endl;
+//}
 
 // testing code for the oset class (ordered set)
 int main() {
-    oset S;     // create an empty set
+
+    typedef int (*functiontype2)(char);
+
+    oset <int, int> S;                 // create an empty set
     cout << "PASS: compiled successfully!" << endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*
        S += 3;     // now should contain 3
 
