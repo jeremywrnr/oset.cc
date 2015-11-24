@@ -8,6 +8,8 @@
 //----------------------------------------------------------------------- Type T
 template<class T>
 class oset {
+
+    //-------------------------------------------------------- Set Element Class
     class node {
         public:
             const T val;
@@ -15,23 +17,20 @@ class oset {
             node(T v): val(v), next(NULL) {}
     };
 
-    node head;   // this node avoids several special cases in the methods below
+    node head; // this node avoids several special cases in the methods below
     node beyond; // to simplify iterator.
 
 
     //--------------------------------------------------------- Iterator support
     public:
     class iter {
-        node *pos;          // node _before_ the one with this->operator*
-        // constructor is private:
-        iter(node* n) : pos(n) { }
-        friend class oset;      // so oset can call the (private) constructor
+        friend class oset; // let oset call (private) constructor
+        node *pos; // node _before_ the one with this->operator*
+        iter(node* n): pos(n) {} // constructor is private:
         public:
-        const T& operator*() {
-            return pos->next->val;
-        }
+        const T& operator*() { return pos->next->val; }
 
-        // support forward iteration.  This is prefix version (++p).
+        // support forward iteration. This is prefix version (++p).
         iter& operator++() {
             if (pos != NULL) pos = pos->next;
             return *this;
@@ -52,8 +51,8 @@ class oset {
 
     //--------------------------------------------------------- Set endpoints
     private:
-    iter start;         // initialized in the constructors below
-    iter finish;        // initialized in the constructors below
+    iter start; // initialized in the constructors below
+    iter finish; // initialized in the constructors below
 
 
     //-------------------------------------------------------- Endpoint readers
@@ -63,6 +62,7 @@ class oset {
 
 
     //-------------------------------------------------------- The Constructor
+    // new empty set:
     oset() : head(0), beyond(0), start(&head), finish(&beyond) {
         head.next = NULL;
     }
@@ -103,7 +103,7 @@ class oset {
 
     //-------------------------------------------------------- Class Methods
     //
-    //-------------------------------------------------- Find (true iff present)
+    //---------------------------------------------- Find (true iff present)
     node* find_prev(const T v) {
         node* p = &head;
         while (true) {
@@ -117,7 +117,7 @@ class oset {
     //-------------------------------------------------------- Assignment
     oset& operator=(oset& other) {
         clear();
-        operator+=(other);      // union (see below)
+        return operator+=(other);      // union (see below)
     }
 
 
