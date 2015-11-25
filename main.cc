@@ -6,20 +6,16 @@
  * Since the lists are sorted, we can create O(N) solutions to intersection,
  * union, and difference operations between sets that are sorted the same way.
  *
- * If no comparator is given upon the oset's creation it uses the default '<',
- * to order elements in increasing order. Otherwise, the user can provide a
- * comparator function to sort the lists. An example of this is given is shown
- * below in the test code.
+ * The programmer can provide a comparator function to sort the lists. An
+ * example of this is given is shown below in the test code. If a list is
+ * copied, then the comparator from the last list is used.
  * */
 
 
-#include <algorithm>
 #include <iostream>
 #include <string>
 #include "oset.h"
 
-using std::transform;
-using std::string;
 using std::cout;
 using std::cerr;
 using std::endl;
@@ -67,8 +63,10 @@ int intComp(int a, int b) { return a >= b; }
 // Double comparison (increasing order)
 int doubleComp(double a, double b) { return a >= b; }
 
-// Case (in) sensitive comparator (dont convert)
+// String case sensitive comparator (dont convert)
 int caseComp(string a, string b) { return a.compare(b); }
+
+// String case in-sensitive comparator (convert)
 int alphaComp(string a, string b) { // convert to lower
     transform(a.begin(), a.end(), a.begin(), ::tolower);
     transform(b.begin(), b.end(), b.begin(), ::tolower);
@@ -101,18 +99,30 @@ int main() {
     assert(true, B[4]); assert(true, B[5]);
     pass(); // need to call manually
 
-    // 7 | Copying constructor.
+    // 7 | Copying constructor
     A = B; test(tbua, A);
 
-    // 8 | Create a double set, then add 4 and 3
+    // 8 | Create a double set, then add 4 and 3 {3, 4}
     oset <double> C(&doubleComp); (C += 4) += 3;
     double tc[]= {3, 4}; test(tc, C);
 
-    // 9 | Make set w/ 6, then add 5 and 4
+    // 9 | Make set w/ 6, then add 5 and 4 {4, 5, 6}
     // + testing removing fake elements
     oset <double> D(6, &doubleComp); (D += 5) += 4;
-    double td[]= {4, 5, 6}; test(td, D);
     D -= 10; D -= 20; D -= 30; D -= 40;
+    double td[]= {4, 5, 6}; test(td, D);
+
+    // 10 | Union of a double set -> 3456
+    C += D; double tduc[]= {3, 4, 5, 6}; test(tduc, C);
+
+    // 11 | Difference of a double set -> 3
+    C -= D; double tcdd[]= {3}; test(tcdd, C);
+
+    // 12 | String case ordering
+    cout << caseComp("world", "hello") << endl;
+    oset <string> E(&caseComp);
+    //E += "helloooo"; //E += "world";
+
 
     /* */
 

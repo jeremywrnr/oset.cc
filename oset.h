@@ -1,8 +1,11 @@
 // guard against multiple includes
 #ifndef _oset_h
 #define _oset_h
-// needed for NULL
-#include <stddef.h>
+#include <stddef.h>  // needed for NULL
+#include <algorithm> // needed for lowercase
+#include <string>    // needed for lowercasw
+using std::transform;
+using std::string;
 
 
 //----------------------------------------------------------------------- Type T
@@ -155,6 +158,8 @@ class oset {
 
     //-------------------------------------------------------- Union
     oset& operator+=(oset& other) {
+        // check if comparators are the same, if not do old method:
+        // else take advantage of same ordering with O(n) solution
         for (iter i = other.begin(); i != other.end(); ++i)
             operator+=(*i);
         return *this;
@@ -185,7 +190,7 @@ class oset {
 
     //-------------------------------------------------------- Intersection
     oset& operator*=(oset& other) {
-        oset temp(comp); // empty
+        oset temp(comp); // empty, with old comp
         for (iter i = begin(); i != end(); ++i)
             if (other[*i]) temp+=(*i);
         clear();
