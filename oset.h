@@ -163,8 +163,7 @@ class oset {
         } return *this;
     }
 
-    private:
-    // pass in the node to insert onto
+    private: // pass in the node to insert onto
     node* append(const T v, node* p) {
         node* n = new node(v);
         n->next = NULL;
@@ -174,23 +173,19 @@ class oset {
 
 
     //-------------------------------------------------------- Union
-    // helper method for checking if more nodes exist in set
-    int more(node *p) { return (p->next != NULL); }
-
-    // the actual oset union method
-    public:
+    public: // the actual oset union method
     oset& operator+=(oset& other) {
         if(comp == other.comp) { // same ordering -> O(n) solution
 
             oset temp1(comp); // make a copy of ours
             node* tmphead1 = &temp1.head;
             for (iter i = begin(); i != end(); ++i)
-                append(*i, tmphead1);
+                tmphead1 = append(*i, tmphead1);
 
             oset temp2(comp); // making a copy of theirs
             node* tmphead2 = &temp2.head;
             for (iter i = other.begin(); i != other.end(); ++i)
-                append(*i, tmphead2);
+                tmphead2 = append(*i, tmphead2);
 
             clear(); // empty out the current list
             node* tail = &head; // point currenthead
@@ -199,7 +194,6 @@ class oset {
             iter i = temp1.begin();
             iter j = temp2.begin();
             while (i != temp1.end() && j != temp2.end()){
-
                 if (*i == *j) { // same element, add, move both
                     tail = append(*i, tail);
                     i++;
@@ -212,8 +206,8 @@ class oset {
                         tail = append(*j, tail);
                         j++;
                     }
-                }
-            }
+                } // if
+            } // while
 
             // flush out the rest of the list into output
             while (i != temp1.end()){ tail = append(*i, tail); i++; }
