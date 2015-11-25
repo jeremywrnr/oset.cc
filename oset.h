@@ -72,7 +72,7 @@ class oset {
     orderer comp;
 
     // new empty set, with a comparator passed in
-    oset(int (*f)(T, T)) : head(0), beyond(0),
+    oset(int (*f)(T, T)) : head(T()), beyond(T()),
     start(&head), finish(&beyond) {
         //cout << "reached constructor" << endl;
         head.next = NULL;
@@ -80,14 +80,14 @@ class oset {
     }
 
     // new singleton set, with a comparator passed in
-    oset(T v, int (*f)(T, T)) : head(0), beyond(0),
+    oset(T v, int (*f)(T, T)) : head(T()), beyond(T()),
     start(&head), finish(&beyond) {
         head.next = new node(v);
         comp = *f;
     }
 
     // copy constructor, use their constructor instead of passing in one
-    oset(oset& other) : head(0), beyond(0), start(&head), finish(&beyond) {
+    oset(oset& other) : head(T()), beyond(T()), start(&head), finish(&beyond) {
         node *o = other.head.next;
         comp = other.comp;
         node *n = &head;
@@ -355,7 +355,7 @@ void pass() { cout << "GOOD: passed test number " << ++testno << endl; }
 template<class T>
 void assert(T exp, T act) {
     if (exp != act) { // something strange is going on
-        cerr << "FAILURE: failed test number " << ++testno << endl;
+        cerr << "FAILURE: failed test number " << testno + 1 << endl;
         cerr << "Expected (" << exp << "), got (" << act << ")" << endl;
         //exit(1); // ERR AND DIE
     }

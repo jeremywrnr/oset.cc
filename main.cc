@@ -85,16 +85,14 @@ int main() {
     C -= D; double tcdd[]= {3}; test(tcdd, C);
 
     // 12 | String case ordering
-    //cout << caseComp("world", "hello") << endl;
-    //cout << caseComp("HELLO", "hello") << endl;
-    //cout << caseComp("HELLO", "world") << endl;
-    // below line causes a segfault
-    //oset <string> E(&caseComp);
-    //E += "helloooo"; //E += "world";
+    oset <string> E(&caseComp); E += "yo"; E += "hi";
+    string te[] = {"hi", "yo"}; test(te, E);
 
-    /* */
+    // 13 | String case ordering
+    oset <string> F(&caseComp); F += "YO"; F += "hai";
+    string tf[] = {"YO"," hi"}; test(tf, F);
 
-    // Program compiled and tested successfully!
+    // Program compiled, ran and tested successfully!
     cout << "PASS: compiles and runs tests successfully." << endl;
 }
 
