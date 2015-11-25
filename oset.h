@@ -191,49 +191,28 @@ class oset {
             for (iter i = other.begin(); i != other.end(); ++i)
                 append(*i, tmphead2);
 
-            print(temp1);
-
             clear(); // empty out the current list
-            node* tail  = &head; // point to where to append
-            node* lhead = &temp1.head; // get self start
-            node* rhead = &temp2.head; // get other start
+            node* tail  = &head; // point currenthead
 
-            //cout << "entered same comp" << endl;
             // go til end of one list, continue
-            while (more(lhead) && more(rhead)) {
-                if (lhead->val == rhead->val) { // same element, add, move both
-                    append(lhead->val, tail);
-                    lhead = lhead->next;
-                    rhead = rhead->next;
+            iter i = temp1.begin();
+            iter j = temp2.begin();
+            while (i != temp1.end() && j != temp2.end()){
+
+                print(temp1);
+                if (*i == *j) { // same element, add, move both
+                    append(*i, tail);
+                    i++;
+                    j++;
                 } else { // not equal, check which one to add next
-                    if (comp(lhead->val, rhead->val)) { // append, shift l
-                        append(lhead->val, tail);
-                        lhead = lhead->next;
+                    if (comp(*i, *j)) { // append, shift l
+                        append(*i, tail);
+                        i++;
                     } else { // append, shift right hand side
-                        append(rhead->val, tail);
-                        rhead = rhead->next;
+                        append(*j, tail);
+                        j++;
                     }
                 }
-            }
-
-            // handle last comparison, reached end of one list
-            if (lhead->val == rhead->val) { // same element, add, move both
-                append(lhead->val, tail);
-            } else { // not equal, check which one to add next
-                if (comp(lhead->val, rhead->val)) { // append, shift l
-                    append(lhead->val, tail);
-                } else { // append, shift right hand side
-                    append(rhead->val, tail);
-                }
-            }
-
-            // either left or right may have elements left, flush out
-            while (more(lhead)) {
-                append(lhead->val, tail);
-                lhead = lhead->next;
-            } while (more(rhead)) {
-                append(rhead->val, tail);
-                rhead = rhead->next;
             }
 
         } else { // different comparators, we must xcheck each element O(n^2)
