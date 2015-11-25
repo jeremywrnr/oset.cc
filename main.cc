@@ -112,8 +112,11 @@ int main() {
 
     // Program compiled, ran and tested successfully!
     cout << "PASS: compiles and runs tests successfully." << endl;
+
+    /*
     cout << "Ending set data:" << endl;
     print(A); print(B); print(C); print(D);
     print(E); print(F); print(G);
+     */
 }
 
