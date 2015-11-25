@@ -58,9 +58,7 @@ int main() {
     B -= A; int tbda[]= {5}; test(tbda, B);
 
     // 5 | Union the two sets A and B -> B = {4, 5}
-    B += A; int tbua[]= {4, 5};
-    print(B);
-    test(tbua, B);
+    B += A; int tbua[]= {4, 5}; test(tbua, B);
 
     // 6 | Inclusion - check set B{4,5} contains...
     assert(false, B[3]); assert(false, B[10]);
@@ -87,9 +85,9 @@ int main() {
     C -= D; double tcdd[]= {3}; test(tcdd, C);
 
     // 12 | String case ordering
-    cout << caseComp("world", "hello") << endl;
-    cout << caseComp("HELLO", "hello") << endl;
-    cout << caseComp("HELLO", "world") << endl;
+    //cout << caseComp("world", "hello") << endl;
+    //cout << caseComp("HELLO", "hello") << endl;
+    //cout << caseComp("HELLO", "world") << endl;
     // below line causes a segfault
     //oset <string> E(strComp);
     //E += "helloooo"; //E += "world";

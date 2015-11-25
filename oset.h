@@ -88,8 +88,8 @@ class oset {
 
     // copy constructor, use their constructor instead of passing in one
     oset(oset& other) : head(0), beyond(0), start(&head), finish(&beyond) {
-        comp = other.comp;
         node *o = other.head.next;
+        comp = other.comp;
         node *n = &head;
         while (o) {
             n->next = new node(o->val);
@@ -152,7 +152,7 @@ class oset {
     //-------------------------------------------------------- Insertion
     // insert v if not already present; return ref to self
     //
-    oset& operator+=(const T v) {
+    oset& operator+=(const T v) { // default, use find prev to get node
         node* p = find_prev(v); // get * to item, check if included
         if (p->next == NULL || p->next->val != v) {
             node* n = new node(v);
@@ -161,33 +161,43 @@ class oset {
         } return *this;
     }
 
+    // pass in the node to insert onto
+    private:
+    void append(const T v, node* p) {
+        node* n = new node(v);
+        n->next = NULL;
+        p->next = n;
+    }
+
 
     //-------------------------------------------------------- Union
     // helper method for checking if more nodes exist in set
     int more(node *p) { return (p->next != NULL); }
 
     // the actual oset union method
+    public:
     oset& operator+=(oset& other) {
         if(comp == other.comp) { // same ordering -> O(n) solution
 
-            oset temp(comp);  // copy current ordered set
+            oset temp(comp); // copy current ordered set
             for (iter i = begin(); i != end(); ++i)
                 if (other[*i]) temp+=(*i); // each elem
+            node* tail = &head; // point to where to append
             node* lhead = &temp.head; // get self start
             node* rhead = &other.head; // get other start
             clear(); // empty out the current list
 
             while (more(lhead) && more(rhead)) { // go til end of one list
                 if (lhead->val == rhead->val) { // same element, add, move both
-                    operator+=(lhead->val);
+                    append(lhead->val, tail);
                     lhead = lhead->next;
                     rhead = rhead->next;
                 } else {
                     if (comp(lhead->val, rhead->val)) { // append, shift l
-                        operator+=(lhead->val);
+                        append(lhead->val, tail);
                         lhead = lhead->next;
                     } else { // append, shift right hand side
-                        operator+=(rhead->val);
+                        append(rhead->val, tail);
                         rhead = rhead->next;
                     }
                 }
@@ -260,7 +270,7 @@ void pass() {
         if (exp != act) { // something strange is going on
             cerr << "FAILURE: failed test number " << ++testno << endl;
             cerr << "Expected (" << exp << "), got (" << act << ")" << endl;
-            exit(1); // ERR AND DIE
+            //exit(1); // ERR AND DIE
         }
     }
 
