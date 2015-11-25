@@ -136,7 +136,9 @@ class oset {
     //
     oset& operator=(oset& other) {
         clear(); // then do union
-        return operator+=(other);
+        for (iter i = other.begin(); i != other.end(); ++i)
+            operator+=(*i);
+        return *this;
     }
 
 
@@ -161,8 +163,8 @@ class oset {
         } return *this;
     }
 
-    // pass in the node to insert onto
     private:
+    // pass in the node to insert onto
     void append(const T v, node* p) {
         node* n = new node(v);
         n->next = NULL;
@@ -179,20 +181,24 @@ class oset {
     oset& operator+=(oset& other) {
         if(comp == other.comp) { // same ordering -> O(n) solution
 
-            oset temp(comp); // copy current ordered set
-            for (iter i = begin(); i != end(); ++i)
-                if (other[*i]) temp+=(*i); // each elem
-            node* tail = &head; // point to where to append
-            node* lhead = &temp.head; // get self start
-            node* rhead = &other.head; // get other start
-            clear(); // empty out the current list
+            oset temp(comp); // making a copy of list
+            node* tmphead = &temp.head;
+            for (iter i = begin(); i != end(); ++i) {
+                append(*i, tmphead);
+            } clear(); // empty out the current list
 
-            while (more(lhead) && more(rhead)) { // go til end of one list
+            node* tail  = &head; // point to where to append
+            node* rhead = &(other.head); // get other start
+            node* lhead = &(temp.head); // get self start
+
+            //cout << "entered same comp" << endl;
+            // go til end of one list, continue
+            while (more(lhead) && more(rhead)) {
                 if (lhead->val == rhead->val) { // same element, add, move both
                     append(lhead->val, tail);
                     lhead = lhead->next;
                     rhead = rhead->next;
-                } else {
+                } else { // not equal, check which one to add next
                     if (comp(lhead->val, rhead->val)) { // append, shift l
                         append(lhead->val, tail);
                         lhead = lhead->next;
@@ -201,6 +207,13 @@ class oset {
                         rhead = rhead->next;
                     }
                 }
+            }
+
+            // handle last comparison, reached end of one list
+            if (comp(lhead->val, rhead->val)) { // append, shift l
+                append(lhead->val, tail);
+            } else { // append, shift right hand side
+                append(rhead->val, tail);
             }
 
             // either left or right may have elements left, flush out
@@ -268,16 +281,15 @@ void print(oset<T>& OS) {
 
 // OSET Helper
 int testno = 0;
-void pass() {
-    cout << "GOOD: passed test number " << ++testno << endl;}
-    template<class T>
-    void assert(T exp, T act) {
-        if (exp != act) { // something strange is going on
-            cerr << "FAILURE: failed test number " << ++testno << endl;
-            cerr << "Expected (" << exp << "), got (" << act << ")" << endl;
-            //exit(1); // ERR AND DIE
-        }
+void pass() { cout << "GOOD: passed test number " << ++testno << endl; }
+template<class T>
+void assert(T exp, T act) {
+    if (exp != act) { // something strange is going on
+        cerr << "FAILURE: failed test number " << ++testno << endl;
+        cerr << "Expected (" << exp << "), got (" << act << ")" << endl;
+        //exit(1); // ERR AND DIE
     }
+}
 
 
 // OSET Tester

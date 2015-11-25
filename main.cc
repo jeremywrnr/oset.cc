@@ -58,7 +58,12 @@ int main() {
     B -= A; int tbda[]= {5}; test(tbda, B);
 
     // 5 | Union the two sets A and B -> B = {4, 5}
-    B += A; int tbua[]= {4, 5}; test(tbua, B);
+    print(A);
+    print(B);
+    B += A;
+    print(A);
+    print(B);
+    int tbua[]= {4, 5}; test(tbua, B);
 
     // 6 | Inclusion - check set B{4,5} contains...
     assert(false, B[3]); assert(false, B[10]);
