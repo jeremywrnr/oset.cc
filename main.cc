@@ -89,7 +89,7 @@ int main() {
     //cout << caseComp("HELLO", "hello") << endl;
     //cout << caseComp("HELLO", "world") << endl;
     // below line causes a segfault
-    //oset <string> E(strComp);
+    //oset <string> E(&caseComp);
     //E += "helloooo"; //E += "world";
 
     /* */

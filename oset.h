@@ -150,6 +150,12 @@ class oset {
         return (p->next != NULL && p->next->val == v);
     }
 
+    // start at a specific point
+    bool includes(const T v, node* s) {
+        node* p = find_prev(v, s);
+        return (p->next != NULL && p->next->val == v);
+    }
+
 
     //-------------------------------------------------------- Insertion
     // insert v if not already present; return ref to self
@@ -182,7 +188,7 @@ class oset {
             for (iter i = begin(); i != end(); ++i)
                 tmphead1 = append(*i, tmphead1);
 
-            oset temp2(comp); // making a copy of theirs
+            oset temp2(comp); // make a copy of theirs
             node* tmphead2 = &temp2.head;
             for (iter i = other.begin(); i != other.end(); ++i)
                 tmphead2 = append(*i, tmphead2);
@@ -244,13 +250,49 @@ class oset {
 
     //-------------------------------------------------------- Intersection
     oset& operator*=(oset& other) {
-        oset temp(comp); // empty, with old comp
-        for (iter i = begin(); i != end(); ++i)
-            if (other[*i]) temp+=(*i);
-        clear(); // clear, do basic union call
-        for (iter i = temp.begin(); i != temp.end(); ++i)
-            operator+=(*i);
-        return *this; // temp is DESTROYED
+        if(comp == other.comp) { // same ordering -> O(n) solution
+
+            oset temp1(comp); // make a copy of ours
+            node* tmphead1 = &temp1.head;
+            for (iter i = begin(); i != end(); ++i)
+                tmphead1 = append(*i, tmphead1);
+
+            oset temp2(comp); // make a copy of theirs
+            node* tmphead2 = &temp2.head;
+            for (iter i = other.begin(); i != other.end(); ++i)
+                tmphead2 = append(*i, tmphead2);
+
+            clear(); // empty out the current list
+            node* tail = &head; // point currenthead
+
+            // go til end of one list, continue
+            iter i = temp1.begin();
+            iter j = temp2.begin();
+            while (i != temp1.end() && j != temp2.end()){
+                if (*i == *j) { // same element, add, move both
+                    tail = append(*i, tail);
+                    i++;
+                    j++;
+                } else { // not equal, check which one shift
+                    if (comp(*j, *i)) { // shift left
+                        i++;
+                    } else { // then shift right side
+                        j++;
+                    }
+                } // if
+            } // while
+
+            // no need to flush out the set because all remaining elements are
+            // greater, so wouldnt be included in the it anyway
+
+        } else { // different comparators, we must xcheck each element O(n^2)
+            oset temp(comp); // empty, with old comp
+            for (iter i = begin(); i != end(); ++i)
+                if (other[*i]) temp+=(*i);
+            clear(); // clear, do basic union call
+            for (iter i = temp.begin(); i != temp.end(); ++i)
+                operator+=(*i);
+        } return *this;
     }
 };
 
