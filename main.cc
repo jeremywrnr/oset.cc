@@ -85,13 +85,25 @@ int main() {
     // 11 | Difference of a double set -> 3
     C -= D; double tcdd[]= {3}; test(tcdd, C);
 
-    // 12 | String case ordering
+    // 12 | String ordering
     oset <string> E(&caseComp); E += "yo"; E += "hi";
     string te[] = {"hi", "yo"}; test(te, E);
 
     // 13 | String case ordering
-    oset <string> F(&caseComp); F += "YO"; F += "hai";
+    oset <string> F(&caseComp); F += "hai"; F += "YO";
     string tf[] = {"YO", "hai"}; test(tf, F);
+
+    // 13 | String case insensitive ordering
+    oset <string> G(&alphaComp); G += "haii"; G += "YO";
+    string tg[] = {"haii", "YO"}; test(tg, G);
+
+    // extra test somewehere, things pass to easy
+    // also, write up your readme and submit this shit
+    // 14 | String union - same comparator
+    E += F; string teuf[]= {"YO", "hai", "hi", "yo"}; test(teuf, E);
+
+    // 15 | String intersect - different comparators
+    F += "haii"; F *= G; string tfig[]= {"haii", "YO"}; test(tfig, F);
 
     // Program compiled, ran and tested successfully!
     cout << "PASS: compiles and runs tests successfully." << endl;
