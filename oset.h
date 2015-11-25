@@ -165,10 +165,11 @@ class oset {
 
     private:
     // pass in the node to insert onto
-    void append(const T v, node* p) {
+    node* append(const T v, node* p) {
         node* n = new node(v);
         n->next = NULL;
         p->next = n;
+        return n;
     }
 
 
@@ -199,21 +200,22 @@ class oset {
             iter j = temp2.begin();
             while (i != temp1.end() && j != temp2.end()){
 
-                print(temp1);
                 if (*i == *j) { // same element, add, move both
-                    append(*i, tail);
+                    tail = append(*i, tail);
                     i++;
                     j++;
                 } else { // not equal, check which one to add next
                     if (comp(*i, *j)) { // append, shift l
-                        append(*i, tail);
+                        tail = append(*i, tail);
                         i++;
                     } else { // append, shift right hand side
-                        append(*j, tail);
+                        tail = append(*j, tail);
                         j++;
                     }
                 }
             }
+            while (i != temp1.end()){ tail = append(*i, tail); i++; }
+            while (j != temp2.end()){ tail = append(*j, tail); j++; }
 
         } else { // different comparators, we must xcheck each element O(n^2)
             for (iter i = other.begin(); i != other.end(); ++i)
