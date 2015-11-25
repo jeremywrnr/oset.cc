@@ -4,8 +4,10 @@
 #include <stddef.h>  // needed for NULL
 #include <algorithm> // needed for lowercase
 #include <string>    // needed for lowercasw
-using std::transform;
 using std::string;
+using std::cout;
+using std::cerr;
+using std::endl;
 
 
 //----------------------------------------------------------------------- Type T
@@ -65,13 +67,14 @@ class oset {
 
 
     //-------------------------------------------------------- The Constructor
-    // handing the comparator
+    // handling the comparator
     typedef int (*orderer)(T, T);
     orderer comp;
 
     // new empty set, with a comparator passed in
     oset(int (*f)(T, T)) : head(0), beyond(0),
     start(&head), finish(&beyond) {
+        //cout << "reached constructor" << endl;
         head.next = NULL;
         comp = *f;
     }
@@ -98,7 +101,7 @@ class oset {
 
     //-------------------------------------------------------- The Destructor
     private:
-    void clear() {
+    void clear() { // remove all nodes currently in the set
         node *n = head.next;
         while (n) {
             node* t = n->next;
@@ -115,13 +118,18 @@ class oset {
     //-------------------------------------------------------- Class Methods
     //
     //---------------------------------------------- Find (true iff present)
-    node* find_prev(const T v) {
-        node* p = &head;
+    // overloaded version, start at a specific node in the tree
+    node* find_prev(const T v, node* p) {
         while (true) {
-            if (p->next == NULL) return p;
+            if (p->next == NULL) return p; // reached end of list
             if (comp(p->next->val, v)) return p; // use class comparator
-            p = p->next;
+            p = p->next; // move onto the next element
         }
+    }
+
+    // original version, start at the head of the ordered set
+    node* find_prev(const T v) {
+        return find_prev(v, &head);
     }
 
 
@@ -147,7 +155,7 @@ class oset {
     // insert v if not already present; return ref to self
     //
     oset& operator+=(const T v) {
-        node* p = find_prev(v); // get * to item
+        node* p = find_prev(v); // get * to item, check if included
         if (p->next == NULL || p->next->val != v) {
             node* n = new node(v);
             n->next = p->next;
@@ -158,11 +166,15 @@ class oset {
 
     //-------------------------------------------------------- Union
     oset& operator+=(oset& other) {
-        // check if comparators are the same, if not do old method:
-        // else take advantage of same ordering with O(n) solution
-        for (iter i = other.begin(); i != other.end(); ++i)
-            operator+=(*i);
-        return *this;
+        // take advantage of same ordering with O(n) solution
+        if(comp == other.comp){
+            for (iter i = other.begin(); i != other.end(); ++i)
+                operator+=(*i);
+
+        } else { // different comparators, we must check each element O(n)
+            for (iter i = other.begin(); i != other.end(); ++i)
+                operator+=(*i);
+        } return *this;
     }
 
 
@@ -198,5 +210,43 @@ class oset {
         return *this; // temp is DESTROYED
     }
 };
+
+
+//--------------------------------------------------------------------- Helpers
+// mosty for testing / printing code in main
+//
+int testno = 0;
+void pass() {
+    cout << "GOOD: passed test number " << ++testno << endl;}
+    template<class T>
+    void assert(T exp, T act) {
+        if (exp != act) { // something strange is going on
+            cerr << "FAILURE: failed test number " << ++testno << endl;
+            cerr << "Expected (" << exp << "), got (" << act << ")" << endl;
+            exit(1); // ERR AND DIE
+        }
+    }
+
+
+// OSET Tester
+template<class T>
+void test(T expected[], oset<T>& OS) {
+    int e = 0; // expected iterator for checking with primitive arrays
+    for (typename oset<T>::iter i = OS.begin(); i != OS.end(); ++i) {
+        assert(expected[e], *i);
+        e++; // check next
+    } // tests have passed!
+    pass();
+}
+
+
+// OSET Printer
+template<class T>
+void print(oset<T>& OS) {
+    for (typename oset<T>::iter i = OS.begin(); i != OS.end(); ++i)
+        cout << *i << " ";
+    cout << endl;
+}
+
 
 #endif

@@ -15,45 +15,11 @@
 #include <iostream>
 #include <string>
 #include "oset.h"
-
+using std::transform;
+using std::string;
 using std::cout;
 using std::cerr;
 using std::endl;
-
-
-// OSET Assert
-int testno = 0;
-void pass() {
-    cout << "GOOD: passed test number " << ++testno << endl;}
-    template<class T>
-    void assert(T exp, T act) {
-        if (exp != act) { // something strange is going on
-            cerr << "FAILURE: failed test number " << ++testno << endl;
-            cerr << "Expected (" << exp << "), got (" << act << ")" << endl;
-            exit(1); // ERR AND DIE
-        }
-    }
-
-
-// OSET Tester
-template<class T>
-void test(T expected[], oset<T>& OS) {
-    int e = 0; // expected iterator for checking with primitive arrays
-    for (typename oset<T>::iter i = OS.begin(); i != OS.end(); ++i) {
-        assert(expected[e], *i);
-        e++; // check next
-    } // tests have passed!
-    pass();
-}
-
-
-// OSET Printer
-template<class T>
-void print(oset<T>& OS) {
-    for (typename oset<T>::iter i = OS.begin(); i != OS.end(); ++i)
-        cout << *i << " ";
-    cout << endl;
-}
 
 
 // Comparator definitions for testing
@@ -64,6 +30,7 @@ int intComp(int a, int b) { return a >= b; }
 int doubleComp(double a, double b) { return a >= b; }
 
 // String case sensitive comparator (dont convert)
+int strComp(string a, string b) { return 1; }
 int caseComp(string a, string b) { return a.compare(b); }
 
 // String case in-sensitive comparator (convert)
@@ -120,7 +87,10 @@ int main() {
 
     // 12 | String case ordering
     cout << caseComp("world", "hello") << endl;
-    oset <string> E(&caseComp);
+    cout << caseComp("HELLO", "hello") << endl;
+    cout << caseComp("HELLO", "world") << endl;
+    // below line causes a segfault
+    //oset <string> E(strComp);
     //E += "helloooo"; //E += "world";
 
 
