@@ -119,6 +119,7 @@ class oset {
     //
     //---------------------------------------------- Find (true iff present)
     // overloaded version, start at a specific node in the tree
+    //
     node* find_prev(const T v, node* p) {
         while (true) {
             if (p->next == NULL) return p; // reached end of list
@@ -242,9 +243,48 @@ class oset {
 
     //-------------------------------------------------------- Difference
     oset& operator-=(oset& other) {
-        for (iter i = other.begin(); i != other.end(); ++i)
-            operator-=(*i);
-        return *this;
+        if(comp == other.comp) { // same ordering -> O(n) solution
+
+            oset temp1(comp); // make a copy of ours
+            node* tmphead1 = &temp1.head;
+            for (iter i = begin(); i != end(); ++i)
+                tmphead1 = append(*i, tmphead1);
+
+            oset temp2(comp); // make a copy of theirs
+            node* tmphead2 = &temp2.head;
+            for (iter i = other.begin(); i != other.end(); ++i)
+                tmphead2 = append(*i, tmphead2);
+
+            clear(); // empty out the current list
+            node* tail = &head; // point currenthead
+
+            // go til end of one list, continue
+            iter i = temp1.begin();
+            iter j = temp2.begin();
+            while (i != temp1.end() && j != temp2.end()){
+                if (*i == *j) { // same element, add, move both
+                    i++;
+                    j++;
+                } else { // not equal, check which one shift
+                    if (comp(*j, *i)) { // shift left
+                        tail = append(*i, tail);
+                        i++;
+                    } else { // then shift right side
+                        tail = append(*j, tail);
+                        j++;
+                    }
+                } // if
+            } // while
+
+            // flush out the rest of the list into output
+            while (i != temp1.end()){ tail = append(*i, tail); i++; }
+            while (j != temp2.end()){ tail = append(*j, tail); j++; }
+
+        } else { // different comparators, we must xcheck each element O(n^2)
+            for (iter i = other.begin(); i != other.end(); ++i)
+                operator-=(*i);
+            return *this;
+        } return *this;
     }
 
 
@@ -283,7 +323,7 @@ class oset {
             } // while
 
             // no need to flush out the set because all remaining elements are
-            // greater, so wouldnt be included in the it anyway
+            // greater, so wouldnt be included in the our intersection anyway
 
         } else { // different comparators, we must xcheck each element O(n^2)
             oset temp(comp); // empty, with old comp
