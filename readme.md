@@ -31,8 +31,9 @@ comparator from the last list is used.
 
 
 ## features
-no extra credit was performed for this assignment. all required features for
-this assignment were completed and tested, including:
+there are oset testing and printing methods at the bottom of `oset.h`. no extra
+credit was performed for this assignment. all required features for this
+assignment were completed and tested, including:
 
 
 #### O(n) rewrite of union, difference, and intersection

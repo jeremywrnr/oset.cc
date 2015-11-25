@@ -2,13 +2,7 @@
  * Jeremy Warner for Assignment 5, CSC 254, F2015
  * oset.h provides code for generic ordered sets.
  * main() tests this ordered set class.
- *
- * Since the lists are sorted, we can create O(N) solutions to intersection,
- * union, and difference operations between sets that are sorted the same way.
- *
- * The programmer can provide a comparator function to sort the lists. An
- * example of this is given is shown below in the test code. If a list is
- * copied, then the comparator from the last list is used.
+ * see readme and comments for details.
  * */
 
 
