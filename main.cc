@@ -61,8 +61,13 @@ void print(oset<T>& OS) {
 
 
 // Comparator definitions for testing
+// Int comparison (increasing order)
+int intComp(int a, int b) { return a >= b; }
+
+// Double comparison (increasing order)
+int doubleComp(double a, double b) { return a >= b; }
+
 // Case (in) sensitive comparator (dont convert)
-typedef int (*StringComparator)(string, string);
 int caseComp(string a, string b) { return a.compare(b); }
 int alphaComp(string a, string b) { // convert to lower
     transform(a.begin(), a.end(), a.begin(), ::tolower);
@@ -75,11 +80,11 @@ int alphaComp(string a, string b) { // convert to lower
 int main() {
     // 1 | create an empty set, then add 4 and 3
     // + making sure it orders elements added in
-    oset <int> A; A += 4; A += 3;
+    oset <int> A(&intComp); A += 4; A += 3;
     int ta[]= {3, 4}; test(ta, A);
 
     // 2 | Create an empty set, then add 4 and 5
-    oset <int> B; B += 4; B += 5;
+    oset <int> B(&intComp); B += 4; B += 5;
     int tb[]= {4, 5}; test(tb, B);
 
     // 3 | Intersect the two sets A and B -> A = {4}
@@ -100,14 +105,16 @@ int main() {
     A = B; test(tbua, A);
 
     // 8 | Create a double set, then add 4 and 3
-    oset <double> C; (C += 4) += 3;
+    oset <double> C(&doubleComp); (C += 4) += 3;
     double tc[]= {3, 4}; test(tc, C);
 
     // 9 | Make set w/ 6, then add 5 and 4
     // + testing removing fake elements
-    oset <double> D(6); (D += 5) += 4;
+    oset <double> D(6, &doubleComp); (D += 5) += 4;
     double td[]= {4, 5, 6}; test(td, D);
     D -= 10; D -= 20; D -= 30; D -= 40;
+
+    /* */
 
     // Program compiled and tested successfully!
     cout << "PASS: compiles and runs tests successfully." << endl;

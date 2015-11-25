@@ -62,18 +62,27 @@ class oset {
 
 
     //-------------------------------------------------------- The Constructor
-    // new empty set:
-    oset() : head(0), beyond(0), start(&head), finish(&beyond) {
+    // handing the comparator
+    typedef int (*orderer)(T, T);
+    orderer comp;
+
+    // new empty set, with a comparator passed in
+    oset(int (*f)(T, T)) : head(0), beyond(0),
+    start(&head), finish(&beyond) {
         head.next = NULL;
+        comp = *f;
     }
 
-    // new singleton set:
-    oset(T v) : head(0), beyond(0), start(&head), finish(&beyond) {
+    // new singleton set, with a comparator passed in
+    oset(T v, int (*f)(T, T)) : head(0), beyond(0),
+    start(&head), finish(&beyond) {
         head.next = new node(v);
+        comp = *f;
     }
 
-    // copy constructor:
+    // copy constructor, use their constructor instead of passing in one
     oset(oset& other) : head(0), beyond(0), start(&head), finish(&beyond) {
+        comp = other.comp;
         node *o = other.head.next;
         node *n = &head;
         while (o) {
@@ -107,7 +116,7 @@ class oset {
         node* p = &head;
         while (true) {
             if (p->next == NULL) return p;
-            if (p->next->val >= v) return p;
+            if (comp(p->next->val, v)) return p; // use class comparator
             p = p->next;
         }
     }
@@ -152,7 +161,7 @@ class oset {
     }
 
 
-    //-------------------------------------------------------- Removal
+    //-------------------------------------------------------- Deletion
     // remove v if present; return ref to self
     //
     oset& operator-=(const T v) {
@@ -176,7 +185,7 @@ class oset {
 
     //-------------------------------------------------------- Intersection
     oset& operator*=(oset& other) {
-        oset temp; // empty
+        oset temp(comp); // empty
         for (iter i = begin(); i != end(); ++i)
             if (other[*i]) temp+=(*i);
         clear();
