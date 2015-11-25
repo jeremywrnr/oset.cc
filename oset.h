@@ -204,8 +204,13 @@ class oset {
             }
 
             // either left or right may have elements left, flush out
-            while (more(lhead)) { operator+=(lhead->val); lhead = lhead->next; }
-            while (more(rhead)) { operator+=(rhead->val); rhead = rhead->next; }
+            while (more(lhead)) {
+                append(lhead->val, tail);
+                lhead = lhead->next;
+            } while (more(rhead)) {
+                append(rhead->val, tail);
+                rhead = rhead->next;
+            }
 
         } else { // different comparators, we must xcheck each element O(n^2)
             for (iter i = other.begin(); i != other.end(); ++i)
