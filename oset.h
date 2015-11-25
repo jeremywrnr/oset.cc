@@ -181,15 +181,22 @@ class oset {
     oset& operator+=(oset& other) {
         if(comp == other.comp) { // same ordering -> O(n) solution
 
-            oset temp(comp); // making a copy of list
-            node* tmphead = &temp.head;
-            for (iter i = begin(); i != end(); ++i) {
-                append(*i, tmphead);
-            } clear(); // empty out the current list
+            oset temp1(comp); // making a copy of ours
+            node* tmphead1 = &temp1.head;
+            for (iter i = begin(); i != end(); ++i)
+                append(*i, tmphead1);
 
+            oset temp2(comp); // making a copy of theirs
+            node* tmphead2 = &temp2.head;
+            for (iter i = other.begin(); i != other.end(); ++i)
+                append(*i, tmphead2);
+
+            print(temp1);
+
+            clear(); // empty out the current list
             node* tail  = &head; // point to where to append
-            node* rhead = &(other.head); // get other start
-            node* lhead = &(temp.head); // get self start
+            node* lhead = &temp1.head; // get self start
+            node* rhead = &temp2.head; // get other start
 
             //cout << "entered same comp" << endl;
             // go til end of one list, continue
@@ -210,10 +217,14 @@ class oset {
             }
 
             // handle last comparison, reached end of one list
-            if (comp(lhead->val, rhead->val)) { // append, shift l
+            if (lhead->val == rhead->val) { // same element, add, move both
                 append(lhead->val, tail);
-            } else { // append, shift right hand side
-                append(rhead->val, tail);
+            } else { // not equal, check which one to add next
+                if (comp(lhead->val, rhead->val)) { // append, shift l
+                    append(lhead->val, tail);
+                } else { // append, shift right hand side
+                    append(rhead->val, tail);
+                }
             }
 
             // either left or right may have elements left, flush out
