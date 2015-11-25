@@ -30,7 +30,6 @@ int intComp(int a, int b) { return a >= b; }
 int doubleComp(double a, double b) { return a >= b; }
 
 // String case sensitive comparator (dont convert)
-int strComp(string a, string b) { return 1; }
 int caseComp(string a, string b) { return a.compare(b); }
 
 // String case in-sensitive comparator (convert)
@@ -59,7 +58,9 @@ int main() {
     B -= A; int tbda[]= {5}; test(tbda, B);
 
     // 5 | Union the two sets A and B -> B = {4, 5}
-    B += A; int tbua[]= {4, 5}; test(tbua, B);
+    B += A; int tbua[]= {4, 5};
+    print(B);
+    test(tbua, B);
 
     // 6 | Inclusion - check set B{4,5} contains...
     assert(false, B[3]); assert(false, B[10]);
@@ -92,7 +93,6 @@ int main() {
     // below line causes a segfault
     //oset <string> E(strComp);
     //E += "helloooo"; //E += "world";
-
 
     /* */
 

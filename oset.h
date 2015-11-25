@@ -128,9 +128,7 @@ class oset {
     }
 
     // original version, start at the head of the ordered set
-    node* find_prev(const T v) {
-        return find_prev(v, &head);
-    }
+    node* find_prev(const T v) { return find_prev(v, &head); }
 
 
     //-------------------------------------------------------- Assignment
@@ -165,13 +163,41 @@ class oset {
 
 
     //-------------------------------------------------------- Union
-    oset& operator+=(oset& other) {
-        // take advantage of same ordering with O(n) solution
-        if(comp == other.comp){
-            for (iter i = other.begin(); i != other.end(); ++i)
-                operator+=(*i);
+    // helper method for checking if more nodes exist in set
+    int more(node *p) { return (p->next != NULL); }
 
-        } else { // different comparators, we must check each element O(n)
+    // the actual oset union method
+    oset& operator+=(oset& other) {
+        if(comp == other.comp) { // same ordering -> O(n) solution
+
+            oset temp(comp);  // copy current ordered set
+            for (iter i = begin(); i != end(); ++i)
+                if (other[*i]) temp+=(*i); // each elem
+            node* lhead = &temp.head; // get self start
+            node* rhead = &other.head; // get other start
+            clear(); // empty out the current list
+
+            while (more(lhead) && more(rhead)) { // go til end of one list
+                if (lhead->val == rhead->val) { // same element, add, move both
+                    operator+=(lhead->val);
+                    lhead = lhead->next;
+                    rhead = rhead->next;
+                } else {
+                    if (comp(lhead->val, rhead->val)) { // append, shift l
+                        operator+=(lhead->val);
+                        lhead = lhead->next;
+                    } else { // append, shift right hand side
+                        operator+=(rhead->val);
+                        rhead = rhead->next;
+                    }
+                }
+            }
+
+            // either left or right may have elements left, flush out
+            while (more(lhead)) { operator+=(lhead->val); lhead = lhead->next; }
+            while (more(rhead)) { operator+=(rhead->val); rhead = rhead->next; }
+
+        } else { // different comparators, we must xcheck each element O(n^2)
             for (iter i = other.begin(); i != other.end(); ++i)
                 operator+=(*i);
         } return *this;
@@ -205,8 +231,9 @@ class oset {
         oset temp(comp); // empty, with old comp
         for (iter i = begin(); i != end(); ++i)
             if (other[*i]) temp+=(*i);
-        clear();
-        operator+=(temp); // union call
+        clear(); // clear, do basic union call
+        for (iter i = temp.begin(); i != temp.end(); ++i)
+            operator+=(*i);
         return *this; // temp is DESTROYED
     }
 };
@@ -215,6 +242,16 @@ class oset {
 //--------------------------------------------------------------------- Helpers
 // mosty for testing / printing code in main
 //
+// OSET Printer
+template<class T>
+void print(oset<T>& OS) {
+    for (typename oset<T>::iter i = OS.begin(); i != OS.end(); ++i)
+        cout << *i << " ";
+    cout << endl;
+}
+
+
+// OSET Helper
 int testno = 0;
 void pass() {
     cout << "GOOD: passed test number " << ++testno << endl;}
@@ -237,15 +274,6 @@ void test(T expected[], oset<T>& OS) {
         e++; // check next
     } // tests have passed!
     pass();
-}
-
-
-// OSET Printer
-template<class T>
-void print(oset<T>& OS) {
-    for (typename oset<T>::iter i = OS.begin(); i != OS.end(); ++i)
-        cout << *i << " ";
-    cout << endl;
 }
 
 
