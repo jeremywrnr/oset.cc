@@ -123,7 +123,7 @@ class oset {
     node* find_prev(const T v, node* p) {
         while (true) {
             if (p->next == NULL) return p; // reached end of list
-            if (comp(p->next->val, v) > 0) return p; // use class comparator
+            if (comp(p->next->val, v) >= 0) return p; // use class comparator
             p = p->next; // move onto the next element
         }
     }

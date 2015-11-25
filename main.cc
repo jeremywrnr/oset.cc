@@ -25,10 +25,10 @@ using std::endl;
 
 // Comparator definitions for testing
 // Int comparison (increasing order)
-int intComp(int a, int b) { return a >= b; }
+int intComp(int a, int b) { return a-b; }
 
 // Double comparison (increasing order)
-int doubleComp(double a, double b) { return a >= b; }
+int doubleComp(double a, double b) { return (int)a-b; }
 
 // String case sensitive comparator (dont convert)
 int caseComp(string a, string b) { return a.compare(b); }
@@ -102,10 +102,18 @@ int main() {
     // 14 | String union - same comparator
     E += F; string teuf[]= {"YO", "hai", "hi", "yo"}; test(teuf, E);
 
-    // 15 | String intersect - different comparators
-    F += "haii"; F *= G; string tfig[]= {"haii", "YO"}; test(tfig, F);
+    // 15 | String intersect - different comparators (case sensitive)
+    F += "haii"; // add a word so you can see the different ordering
+    F *= G; string tfig[]= {"YO", "haii"}; test(tfig, F);
+
+    // 16 | String difference - different comparators (case insensitve)
+    E -= "YO"; G += "Diff"; // remove a word to see different ordering
+    G -= E; string tgde[]= {"Diff", "haii", "YO"}; test(tgde, G);
 
     // Program compiled, ran and tested successfully!
     cout << "PASS: compiles and runs tests successfully." << endl;
+    cout << "Ending set data:" << endl;
+    print(A); print(B); print(C); print(D);
+    print(E); print(F); print(G);
 }
 
