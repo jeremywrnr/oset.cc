@@ -58,11 +58,7 @@ int main() {
     B -= A; int tbda[]= {5}; test(tbda, B);
 
     // 5 | Union the two sets A and B -> B = {4, 5}
-    print(A);
-    print(B);
     B += A;
-    print(A);
-    print(B);
     int tbua[]= {4, 5}; test(tbua, B);
 
     // 6 | Inclusion - check set B{4,5} contains...
@@ -79,6 +75,10 @@ int main() {
 
     // 9 | Make set w/ 6, then add 5 and 4 {4, 5, 6}
     // + testing removing fake elements
+    print(A);
+    print(B);
+    print(A);
+    print(B);
     oset <double> D(6, &doubleComp); (D += 5) += 4;
     D -= 10; D -= 20; D -= 30; D -= 40;
     double td[]= {4, 5, 6}; test(td, D);

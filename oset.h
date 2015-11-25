@@ -182,7 +182,7 @@ class oset {
     oset& operator+=(oset& other) {
         if(comp == other.comp) { // same ordering -> O(n) solution
 
-            oset temp1(comp); // making a copy of ours
+            oset temp1(comp); // make a copy of ours
             node* tmphead1 = &temp1.head;
             for (iter i = begin(); i != end(); ++i)
                 append(*i, tmphead1);
@@ -193,7 +193,7 @@ class oset {
                 append(*i, tmphead2);
 
             clear(); // empty out the current list
-            node* tail  = &head; // point currenthead
+            node* tail = &head; // point currenthead
 
             // go til end of one list, continue
             iter i = temp1.begin();
@@ -205,15 +205,17 @@ class oset {
                     i++;
                     j++;
                 } else { // not equal, check which one to add next
-                    if (comp(*i, *j)) { // append, shift l
+                    if (comp(*j, *i)) { // append, shift l
                         tail = append(*i, tail);
                         i++;
-                    } else { // append, shift right hand side
+                    } else { // append, then shift right side
                         tail = append(*j, tail);
                         j++;
                     }
                 }
             }
+
+            // flush out the rest of the list into output
             while (i != temp1.end()){ tail = append(*i, tail); i++; }
             while (j != temp2.end()){ tail = append(*j, tail); j++; }
 
