@@ -1,20 +1,19 @@
 // guard against multiple includes
 #ifndef _oset_h
 #define _oset_h
-#include <stddef.h>  // needed for NULL
-#include <algorithm> // needed for lowercase
-#include <string>    // needed for lowercasw
-using std::string;
+#include <stddef.h> // needed for NULL
 using std::cout;
 using std::cerr;
 using std::endl;
 
 
-//----------------------------------------------------------------------- Type T
+//----------------------------------------------- Generic Ordered Sets of Type T
+//
 template<class T>
 class oset {
 
     //-------------------------------------------------------- Set Element Class
+    //
     class node {
         public:
             const T val;
@@ -27,6 +26,7 @@ class oset {
 
 
     //--------------------------------------------------------- Iterator support
+    //
     public:
     class iter {
         friend class oset; // let oset call (private) constructor
@@ -117,13 +117,13 @@ class oset {
 
     //-------------------------------------------------------- Class Methods
     //
-    //---------------------------------------------- Find (true iff present)
+    //--------------------------------------------------- Find previous node
     // overloaded version, start at a specific node in the tree
     //
     node* find_prev(const T v, node* p) {
         while (true) {
             if (p->next == NULL) return p; // reached end of list
-            if (comp(p->next->val, v)) return p; // use class comparator
+            if (comp(p->next->val, v) > 0) return p; // use class comparator
             p = p->next; // move onto the next element
         }
     }
@@ -148,12 +148,6 @@ class oset {
     //
     bool operator[](const T v) {
         node* p = find_prev(v);
-        return (p->next != NULL && p->next->val == v);
-    }
-
-    // start at a specific point
-    bool includes(const T v, node* s) {
-        node* p = find_prev(v, s);
         return (p->next != NULL && p->next->val == v);
     }
 
@@ -206,7 +200,7 @@ class oset {
                     i++;
                     j++;
                 } else { // not equal, check which one to add next
-                    if (comp(*j, *i)) { // append, shift l
+                    if (comp(*j, *i) > 0) { // append, shift l
                         tail = append(*i, tail);
                         i++;
                     } else { // append, then shift right side
@@ -266,7 +260,7 @@ class oset {
                     i++;
                     j++;
                 } else { // not equal, check which one shift
-                    if (comp(*j, *i)) { // shift left
+                    if (comp(*j, *i) > 0) { // shift left
                         tail = append(*i, tail);
                         i++;
                     } else { // then shift right side
@@ -314,7 +308,7 @@ class oset {
                     i++;
                     j++;
                 } else { // not equal, check which one shift
-                    if (comp(*j, *i)) { // shift left
+                    if (comp(*j, *i) > 0) { // shift left
                         i++;
                     } else { // then shift right side
                         j++;
@@ -338,7 +332,7 @@ class oset {
 
 
 //--------------------------------------------------------------------- Helpers
-// mosty for testing / printing code in main
+// mostly for testing / printing code in main
 //
 // OSET Printer
 template<class T>
@@ -349,7 +343,7 @@ void print(oset<T>& OS) {
 }
 
 
-// OSET Helper
+// OSET Test Helper
 int testno = 0;
 void pass() { cout << "GOOD: passed test number " << ++testno << endl; }
 template<class T>
@@ -375,3 +369,4 @@ void test(T expected[], oset<T>& OS) {
 
 
 #endif
+

@@ -12,6 +12,7 @@
  * */
 
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include "oset.h"
@@ -90,7 +91,7 @@ int main() {
 
     // 13 | String case ordering
     oset <string> F(&caseComp); F += "YO"; F += "hai";
-    string tf[] = {"YO"," hi"}; test(tf, F);
+    string tf[] = {"YO", "hai"}; test(tf, F);
 
     // Program compiled, ran and tested successfully!
     cout << "PASS: compiles and runs tests successfully." << endl;
