@@ -369,4 +369,3 @@ void test(T expected[], oset<T>& OS) {
 
 
 #endif
-
